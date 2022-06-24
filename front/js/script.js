@@ -6,7 +6,7 @@ async function fetchProducts() {
         const response = await fetch(apiUrl);
 
         if(!response.ok) {
-            throw new Error('Failed to fetch Kanap products: ${response.status}');
+            throw new Error('Failed to fetch Kanap products:', response.status);
         }
 
         // const products = await response.json();
@@ -18,24 +18,24 @@ async function fetchProducts() {
 
 }
 
-//function to insert products from api into dom, takes html element id parameter to insert into
+//function to list products from api into dom, takes html element id parameter to insert into
 
-function insertProducts(productContainerElementId) {
-    const productContainerElementId = document.getElementById(productContainerElementId);
+function listProducts(productContainerElementId) {
+    const productContainerElement = document.getElementById(productContainerElementId);
 
-    if(!productContainerElementId) {
+    if(!productContainerElement ) {
         return 0;
     }
 
     fetchProducts()
     .then(products => {
-        if(!products) {)
+        if(!products) {
             productContainerElementId.innerHTML = 'No products fetched!';
             return 0;
         }
 
         for( const product of products) {
-            productContainerElementId.appendChild(createProductElement(product));
+            productContainerElement.appendChild(createProductElement(product));
         }
 
 
@@ -48,7 +48,7 @@ function insertProducts(productContainerElementId) {
 //function to create a new product dom element for the returned info from api, ie new img,title,description
 function createProductElement(product) {
     const anchorElement = document.createElement('a');
-    anchorElement.setAttribute('href', `${apiUrl}/${product.id}`);
+    anchorElement.setAttribute('href', `${apiUrl}/${product._id}`);
     anchorElement.setAttribute('target', '_blank');
 
 
@@ -56,24 +56,26 @@ function createProductElement(product) {
     anchorElement.appendChild(articleElement);
 
     const imageElement = document.createElement('img');
-    imageElement.setAttribute('src', product.imageURL);
+    imageElement.setAttribute('src', product.imageUrl);
     imageElement.setAttribute('alt', product.altTxt);
     articleElement.appendChild(imageElement);
 
 
     const titleElement = document.createElement('h3');
     titleElement.innerHTML = product.name;
+    titleElement.className = "productName";
     articleElement.appendChild(titleElement);
 
     const descriptionElement = document.createElement('p');
     descriptionElement.innerHTML = product.description;
+    descriptionElement.className = "productDescription";
     articleElement.appendChild(descriptionElement);
 
 
-    return articleElement;
+    return anchorElement;
 
     
 }
 
 
-insertProducts('items');
+listProducts('items');
