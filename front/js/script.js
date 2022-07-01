@@ -1,5 +1,5 @@
 const apiUrl = 'http://localhost:3000/api/products'
-
+const productPageLink = "./product.html"
 //GET request function using fetch, will request all products contained by api
 async function fetchProducts() {
     try {
@@ -9,8 +9,6 @@ async function fetchProducts() {
             throw new Error('Failed to fetch Kanap products:', response.status);
         }
 
-        // const products = await response.json();
-        // return products;
         return await response.json();
     }   catch(e) {
         console.log(e);
@@ -30,7 +28,7 @@ function listProducts(productContainerElementId) {
     fetchProducts()
     .then(products => {
         if(!products) {
-            productContainerElementId.innerHTML = 'No products fetched!';
+            productContainerElement.innerHTML = 'No products fetched!';
             return 0;
         }
 
@@ -48,7 +46,7 @@ function listProducts(productContainerElementId) {
 //function to create a new product dom element for the returned info from api, ie new img,title,description
 function createProductElement(product) {
     const anchorElement = document.createElement('a');
-    anchorElement.setAttribute('href', `${apiUrl}/${product._id}`);
+    anchorElement.setAttribute('href', `${productPageLink}?id=${product._id}`);
     anchorElement.setAttribute('target', '_blank');
 
 
@@ -71,11 +69,9 @@ function createProductElement(product) {
     descriptionElement.className = "productDescription";
     articleElement.appendChild(descriptionElement);
 
-
     return anchorElement;
-
-    
 }
 
-
+// function call to insert products into items div on homepage
 listProducts('items');
+
